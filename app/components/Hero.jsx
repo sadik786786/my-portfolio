@@ -1,15 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback ,useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { 
   ArrowRight, 
-  Sparkles, 
-  ChevronDown,
-  Github,
-  Linkedin,
-  Mail,
+  Sparkles,
   Star,
   Code,
   Server,
@@ -24,172 +20,150 @@ import {
 export default function Hero() {
   const [textIndex, setTextIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef(null);
-  const animationFrameRef = useRef(null);
   const { scrollYProgress } = useScroll();
   
   const opacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.3], [1, 0.9]);
   
-  const roles = [
+  const roles = useMemo(() => [
     "Full-Stack Developer",
     "UI/UX Designer",
     "Problem Solver",
-    "Tech Enthusiast"
-  ];
+    "Tech Enthusiast",
+    "Creative Coder"
+  ], []);
 
+  // Check mobile on mount
   useEffect(() => {
-    setIsMounted(true);
     setIsMobile(window.innerWidth < 768);
-    
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Role text animation - optimized
   useEffect(() => {
     const interval = setInterval(() => {
-      setTextIndex((prev) => (prev + 1) % roles.length);
+      setTextIndex(prev => (prev + 1) % roles.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [roles.length]);
 
-  const stats = [
+  const stats = useMemo(() => [
     { value: "5+", label: "Projects", icon: Target, color: "from-blue-500 to-cyan-500" },
     { value: "2+", label: "Years Exp", icon: Calendar, color: "from-purple-500 to-pink-500" },
     { value: "99%", label: "Satisfaction", icon: Award, color: "from-green-500 to-emerald-500" },
     { value: "15+", label: "Technologies", icon: Cpu, color: "from-orange-500 to-yellow-500" },
-  ];
+  ], []);
 
-  const techStack = [
+  const techStack = useMemo(() => [
     { name: "React", color: "bg-blue-500", icon: Code },
     { name: "Next.js", color: "bg-black", icon: Cpu },
     { name: "PostgreSQL", color: "bg-green-600", icon: Server },
     { name: "Tailwind", color: "bg-cyan-500", icon: Palette },
-  ];
+  ], []);
 
-  // Memoize animations to prevent unnecessary recalculations
-  const containerVariants = useMemo(() => ({
+  // Static container variants
+  const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.08, // Reduced from 0.15
-        delayChildren: 0.1 // Reduced from 0.2
+        staggerChildren: 0.1,
+        delayChildren: 0.1
       }
     }
-  }), []);
+  };
 
-  const itemVariants = useMemo(() => ({
-    hidden: { y: 20, opacity: 0 }, // Reduced from 30
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 12, // Increased damping for smoother motion
-        mass: 0.5 // Reduced mass
+        type: "tween",
+        duration: 0.3,
+        ease: "easeOut"
       }
     }
-  }), []);
-
-  // Optimized background elements with reduced complexity
-  const BackgroundElements = () => {
-    if (isMobile) {
-      return (
-        <>
-          {/* Simplified mobile background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900">
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent" />
-          </div>
-        </>
-      );
-    }
-
-    return (
-      <>
-        {/* Optimized moving grid with reduced updates */}
-        <div className="absolute inset-0 overflow-hidden opacity-[0.015]">
-          <div className="absolute inset-0" 
-            style={{
-              backgroundImage: `
-                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px)
-              `,
-              backgroundSize: '80px 80px' // Increased size
-            }}
-          />
-        </div>
-
-        {/* Reduced number of gradient orbs */}
-        <div className="absolute w-[600px] h-[600px] left-[5%] top-[10%] rounded-full blur-2xl bg-gradient-to-br from-blue-900/10 via-purple-900/10 to-transparent pointer-events-none" />
-        <div className="absolute w-[500px] h-[500px] right-[10%] bottom-[20%] rounded-full blur-2xl bg-gradient-to-br from-cyan-900/10 via-purple-900/10 to-transparent pointer-events-none" />
-
-        {/* Static geometric shapes instead of animated */}
-        <div className="absolute top-20 left-20 w-24 h-24 opacity-[0.03] backdrop-blur-sm border border-white/5" 
-          style={{
-            clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)'
-          }}
-        />
-        <div className="absolute bottom-20 right-20 w-32 h-32 opacity-[0.03] backdrop-blur-sm border border-white/5 rotate-45"
-          style={{
-            clipPath: 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)'
-          }}
-        />
-      </>
-    );
   };
 
-  // Optimized profile picture component
-  const ProfilePicture = () => (
+  // Static background - no animations
+  const StaticBackground = () => (
+    <div className="absolute inset-0 overflow-hidden">
+      {/* Main gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900" />
+      
+      {/* Static gradient orbs */}
+      <div 
+        className="absolute w-[600px] h-[600px] left-[5%] top-[10%] rounded-full blur-2xl bg-gradient-to-br from-blue-900/10 via-purple-900/10 to-transparent" 
+        style={{ opacity: 0.3 }}
+      />
+      <div 
+        className="absolute w-[500px] h-[500px] right-[10%] bottom-[20%] rounded-full blur-2xl bg-gradient-to-br from-cyan-900/10 via-purple-900/10 to-transparent" 
+        style={{ opacity: 0.3 }}
+      />
+      
+      {/* Simple static grid */}
+      <div 
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `
+            linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px),
+            linear-gradient(180deg, rgba(255,255,255,0.02) 1px, transparent 1px)
+          `,
+          backgroundSize: '60px 60px',
+          opacity: 0.1
+        }}
+      />
+      
+      {/* Center glow */}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/5 via-transparent to-cyan-500/5 blur-2xl" />
+    </div>
+  );
+
+  // Profile picture with optimized hover
+  const ProfilePicture = useCallback(() => (
     <motion.div
-      initial={{ scale: 0.9, opacity: 0 }}
+      initial={{ scale: 0.95, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      transition={{ duration: 0.4, type: "spring" }}
-      whileHover={{ scale: 1.02 }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      className="relative w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56 rounded-full overflow-hidden border-4 border-white/10 shadow-lg shadow-blue-500/5 cursor-pointer backdrop-blur-sm"
+      transition={{ duration: 0.3 }}
+      className="relative group"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative w-full h-full bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-cyan-500/10">
+      <div className="relative w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56 rounded-full overflow-hidden border-4 border-white/10 shadow-lg">
         <Image
           src="/me.jpeg"
           alt="Ansari Sadik"
           fill
-          className="object-cover"
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
           priority
           sizes="(max-width: 768px) 190px, (max-width: 1024px) 192px, 224px"
           loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
-      </div>
-      
-      {/* Simplified hover effect */}
-      {isHovered && (
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent flex flex-col items-center justify-center">
-          <Sparkles className="w-6 h-6 text-yellow-400 mb-1" />
-          <p className="text-white text-xs font-medium text-center px-3">
-            Hi there!
-          </p>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+        
+        {/* Hover effect */}
+        {isHovered && (
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent flex flex-col items-center justify-center transition-opacity duration-200">
+            <Sparkles className="w-6 h-6 text-yellow-400 mb-2" />
+            <p className="text-white text-sm font-medium">Hi there! 👋</p>
+          </div>
+        )}
+        
+        {/* Static badge */}
+        <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg z-10">
+          <Star className="w-4 h-4 text-white" />
         </div>
-      )}
-      
-      {/* Static badge */}
-      <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg z-10">
-        <Star className="w-3 h-3 text-white" />
       </div>
     </motion.div>
-  );
+  ), [isHovered]);
 
-  // Optimized tech stack badges
-  const TechStackBadges = () => (
+  // Tech stack badges
+  const TechStackBadges = useCallback(() => (
     <div className="flex flex-col gap-3">
       <h3 className="text-base font-semibold text-gray-300 text-center lg:text-left">
         Tech Stack
@@ -198,27 +172,25 @@ export default function Hero() {
         {techStack.map((tech, index) => (
           <div
             key={index}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:border-blue-500/20 transition-all duration-200"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:border-blue-500/20 transition-all duration-150"
           >
             <div className={`w-5 h-5 rounded ${tech.color} flex items-center justify-center`}>
-              <tech.icon className="w-2.5 h-2.5 text-white" />
+              <tech.icon className="w-3 h-3 text-white" />
             </div>
-            <span className="text-sm text-gray-300">
-              {tech.name}
-            </span>
+            <span className="text-sm text-gray-300">{tech.name}</span>
           </div>
         ))}
       </div>
     </div>
-  );
+  ), [techStack]);
 
-  // Optimized stats for desktop
-  const DesktopStats = () => (
-    <div className="grid grid-cols-2 gap-3">
+  // Stats grid
+  const StatsGrid = useCallback(({ isDesktop = false }) => (
+    <div className={`grid grid-cols-2 gap-3 ${isDesktop ? 'hidden lg:grid' : 'lg:hidden'}`}>
       {stats.map((stat, index) => (
         <div
           key={index}
-          className="relative p-3 rounded-lg bg-white/5 border border-white/10"
+          className="p-3 rounded-lg bg-white/5 border border-white/10 hover:border-white/20 transition-all duration-150"
         >
           <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center mb-1.5`}>
             <stat.icon className="w-4 h-4 text-white" />
@@ -228,15 +200,55 @@ export default function Hero() {
         </div>
       ))}
     </div>
-  );
+  ), [stats]);
+
+  // Role text component
+  const RoleText = useCallback(() => (
+    <motion.div
+      key={textIndex}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.3 }}
+      className="relative inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-full px-4 py-2"
+    >
+      <div className="w-2 h-2 rounded-full bg-blue-500" />
+      <span className="text-base sm:text-lg text-gray-200 font-medium">
+        {roles[textIndex]}
+      </span>
+      <div className="w-2 h-2 rounded-full bg-cyan-500" />
+    </motion.div>
+  ), [textIndex, roles]);
+
+  // CTA Buttons
+  const CTAButtons = useCallback(() => (
+    <div className="flex flex-wrap gap-3">
+      <a
+        href="/projects"
+        className="group relative px-6 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold overflow-hidden"
+      >
+        <span className="relative flex items-center gap-2">
+          View Projects
+          <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+        </span>
+      </a>
+
+      <a
+        href="/contact"
+        className="px-6 py-3 rounded-lg bg-white/5 border border-white/20 text-white font-semibold hover:bg-white/10 transition-all duration-200"
+      >
+        Get in Touch
+      </a>
+    </div>
+  ), []);
 
   return (
     <section 
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden bg-gradient-to-br from-gray-900 via-black to-gray-900"
+      className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden"
     >
-      {/* Optimized Background */}
-      <BackgroundElements />
+      {/* Static Background */}
+      <StaticBackground />
 
       {/* Main Content Container */}
       <motion.div
@@ -246,12 +258,14 @@ export default function Hero() {
         animate="visible"
         className="relative z-10 max-w-7xl mx-auto w-full"
       >
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-12">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
           
           {/* Left Content - Profile & Intro */}
           <div className="lg:w-1/3">
-            <div className="flex flex-col items-center lg:items-start gap-6">
-              <ProfilePicture />
+            <div className="flex flex-col items-center lg:items-start gap-8">
+              <motion.div variants={itemVariants}>
+                <ProfilePicture />
+              </motion.div>
 
               <motion.div variants={itemVariants}>
                 <TechStackBadges />
@@ -259,7 +273,7 @@ export default function Hero() {
 
               {/* Desktop Stats */}
               <motion.div variants={itemVariants} className="hidden lg:block">
-                <DesktopStats />
+                <StatsGrid isDesktop />
               </motion.div>
             </div>
           </div>
@@ -272,101 +286,114 @@ export default function Hero() {
                 variants={itemVariants}
                 className="relative inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10"
               >
-                <Rocket className="w-3.5 h-3.5 text-blue-400" />
+                <Rocket className="w-4 h-4 text-blue-400" />
                 <span className="text-sm text-gray-300">Welcome to my portfolio</span>
-                <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+                <div className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
               </motion.div>
 
               {/* Main Heading */}
-              <motion.div variants={itemVariants} className="space-y-3">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
+              <div className="space-y-3">
+                <motion.h1 
+                  variants={itemVariants}
+                  className="text-3xl sm:text-4xl md:text-5xl font-bold"
+                >
                   <span className="text-white">Hi, I'm </span>
-                  <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                  <span className="hero-gradient-text">
                     Ansari Sadik
                   </span>
-                </h1>
+                </motion.h1>
                 
                 {/* Animated Role Text */}
-                <div className="relative inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 backdrop-blur-sm border border-blue-500/20 rounded-full px-4 py-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span className="text-base sm:text-lg text-gray-200 font-medium">
-                    {roles[textIndex]}
-                  </span>
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
-                </div>
-              </motion.div>
+                <motion.div variants={itemVariants}>
+                  <RoleText />
+                </motion.div>
+              </div>
 
               {/* Description */}
               <motion.div
                 variants={itemVariants}
                 className="text-base text-gray-300 leading-relaxed max-w-2xl"
               >
-                <div className="mb-2">
+                <p className="mb-3">
                   I'm a passionate developer who crafts{" "}
                   <span className="text-blue-400 font-medium">digital experiences</span>{" "}
                   that blend cutting-edge technology with elegant design.
-                </div>
-                <div>
+                </p>
+                <p>
                   Specializing in modern web applications, I transform complex problems into{" "}
                   <span className="text-cyan-400 font-medium">simple, beautiful solutions</span>.
-                </div>
+                </p>
               </motion.div>
 
               {/* Mobile Stats */}
-              <motion.div
-                variants={itemVariants}
-                className="grid grid-cols-2 gap-3 lg:hidden"
-              >
-                {stats.map((stat, index) => (
-                  <div
-                    key={index}
-                    className="p-3 rounded-lg bg-white/5 border border-white/10"
-                  >
-                    <div className="text-lg font-bold text-white">{stat.value}</div>
-                    <div className="text-xs text-gray-400">{stat.label}</div>
-                  </div>
-                ))}
+              <motion.div variants={itemVariants} className="lg:hidden">
+                <StatsGrid />
               </motion.div>
 
               {/* CTA Buttons */}
-              <motion.div
-                variants={itemVariants}
-                className="flex flex-wrap gap-3 pt-2"
-              >
-                <a
-                  href="/projects"
-                  className="group relative px-6 py-2.5 rounded-lg overflow-hidden bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold"
-                >
-                  <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-200" />
-                  <div className="relative flex items-center justify-center gap-2">
-                    <span>View Projects</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </a>
-
-                <a
-                  href="/contact"
-                  className="px-6 py-2.5 rounded-lg bg-white/5 backdrop-blur-sm border border-white/20 text-white font-semibold hover:bg-white/10 transition-all duration-200"
-                >
-                  Get in Touch
-                </a>
+              <motion.div variants={itemVariants} className="pt-4">
+                <CTAButtons />
               </motion.div>
             </div>
           </div>
         </div>
       </motion.div>
 
-      {/* Scroll Indicator for Desktop */}
+      {/* Scroll Indicator */}
       {!isMobile && (
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
         >
-          <ChevronDown className="w-5 h-5 text-gray-400 animate-bounce" />
+          <div className="w-5 h-5 text-gray-400 bounce-animation">
+            <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </div>
         </motion.div>
       )}
+
+      {/* Add minimal CSS animations */}
+      <style jsx>{`
+        @keyframes gradientMove {
+          0%, 100% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+        }
+        
+        @keyframes bounce {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+        
+        .hero-gradient-text {
+          background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: gradientMove 3s ease-in-out infinite;
+        }
+        
+        .bounce-animation {
+          animation: bounce 1.5s ease-in-out infinite;
+        }
+        
+        /* GPU acceleration for smooth animations */
+        .gpu-accelerated {
+          transform: translateZ(0);
+          backface-visibility: hidden;
+          perspective: 1000px;
+        }
+      `}</style>
     </section>
   );
 }
