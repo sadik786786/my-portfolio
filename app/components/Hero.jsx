@@ -251,9 +251,7 @@ export default function Hero() {
           {/* Left Content - Profile & Intro */}
           <div className="lg:w-1/3">
             <div className="flex flex-col items-center lg:items-start gap-6">
-              <motion.div variants={itemVariants}>
-                <ProfilePicture />
-              </motion.div>
+              <ProfilePicture />
 
               <motion.div variants={itemVariants}>
                 <TechStackBadges />
