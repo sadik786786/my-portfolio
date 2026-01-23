@@ -470,7 +470,7 @@ const contactData = [
     icon: <Linkedin className="w-5 h-5 sm:w-6 sm:h-6" />,
     title: "LinkedIn",
     value: "sadikansari",
-    link: "https://linkedin.com/in/sadikansari",
+    link: "https://www.linkedin.com/in/sadik-ansari-239b5733b",
     color: "from-blue-700 to-blue-900",
     gradient: "bg-gradient-to-br from-blue-700/20 to-blue-900/20",
     copyable: false,
