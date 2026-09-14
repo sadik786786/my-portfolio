@@ -30,6 +30,23 @@ const projects = [
     github: "https://github.com/sadik786786",
   },
   {
+  title: "WelcomeShop",
+  category: "fullstack",
+  description:
+    "A modern e-commerce platform that allows users to explore products, view product details, and submit purchase requests easily.",
+  features: [
+    "Product browsing and categories",
+    "Product details and multiple images",
+    "Purchase request system",
+    "Admin product and order management",
+    "Responsive design",
+  ],
+  tech: ["Next.js", "Supabase", "Tailwind CSS"],
+  live: "https://welcome-shop-gamma.vercel.app/",
+  image: "/welcomeshop.png",
+  github: "https://github.com/sadik786786",
+},
+  {
     title: "News Website",
     category: "frontend",
     description:
