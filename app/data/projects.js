@@ -87,7 +87,7 @@ const projects = [
       "Service inquiry section",
     ],
     tech: ["HTML", "CSS", "Bootstrap"],
-    live: "https://nkcustomer.in/",
+    live: "https://sadik786786.github.io/Repair-India---Expert-AC-Refrigerator-Repair-Services/",
     image: "/nkservice.png",
     github: "https://github.com/sadik786786",
   },
